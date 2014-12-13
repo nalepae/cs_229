@@ -4,7 +4,7 @@ Machine Learning
 This repository contains **Octave** scripts.
 On **Ubuntu**, to install **Octave**, just write in a terminal :
 
-**sudo apt_get install octave**
+**sudo apt-get install octave**
 
 -------
 
