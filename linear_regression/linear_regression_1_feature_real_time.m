@@ -1,21 +1,20 @@
 % Learning rate
-ALPHA = 0.2;
+ALPHA = 0.01;
 
 % Polynomial degree
 DEGREE = 3;
 
 % Number of iterations
-NB_ITERATION = 100000;
+NB_ITERATION = 2000;
 
 % Initial theta
 theta = zeros(DEGREE + 1, 1);
 
 % Data files
-file_x = fopen('ex5Linx.dat', 'r');
-file_y = fopen('ex5Liny.dat', 'r');
+datas = load('datas_1_feature.txt');
 
-x = dlmread(file_x);
-y = dlmread(file_y);
+x = datas(:, 1);
+y = datas(:, 2);
 
 X = ones(length(x), 1);
 

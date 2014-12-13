@@ -2,11 +2,12 @@
 DEGREE = 3;
 
 % Data files
-file_x = fopen('ex5Linx.dat', 'r');
-file_y = fopen('ex5Liny.dat', 'r');
+datas = load('datas_1_feature.txt');
 
-x = dlmread(file_x);
-y = dlmread(file_y);
+x = datas(:, 1);
+y = datas(:, 2);
+
+X = ones(length(x), 1);
 
 X = ones(length(x), 1);
 
