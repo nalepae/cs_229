@@ -1,3 +1,7 @@
+%%%%%%%%%%%%%%
+% PARAMETERS %
+%%%%%%%%%%%%%%
+
 % Learning rate
 ALPHA = 0.01;
 
@@ -6,6 +10,10 @@ DEGREE = 3;
 
 % Number of iterations
 NB_ITERATION = 2000;
+
+%%%%%%%%%%%%%%%%%%%%%
+% END OF PARAMETERS %
+%%%%%%%%%%%%%%%%%%%%%
 
 % Initial theta
 theta = zeros(DEGREE + 1, 1);
@@ -43,6 +51,7 @@ for i = 1 : NB_ITERATION
 	hold off;
 	plot(x, y, 'o', 'markerfacecolor', 'r', 'markersize', 10);
 	hold on;
+	grid on;
 
 	x_vec = x_min : 0.01 : x_max;
 
@@ -56,6 +65,7 @@ for i = 1 : NB_ITERATION
 	% Plot J
 	subplot(2, 1, 1);
 	hold on;
+	grid on;
 	plot(i, J);
 
 	% Compute new theta and J

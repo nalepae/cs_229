@@ -33,6 +33,7 @@ figure('name', 'Normal equation', 'NumberTitle', 'off');
 plot(x, y, 'o', 'markerfacecolor', 'r', 'markersize', 10);
 hold on;
 plot(x_vec, y_vec, 'linewidth', 2);
+grid on;
 legend('Data set', 'Linear regression curve');
 
 input('Press any key to exit ...');

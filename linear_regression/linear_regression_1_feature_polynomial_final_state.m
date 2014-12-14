@@ -1,3 +1,7 @@
+%%%%%%%%%%%%%%
+% PARAMETERS %
+%%%%%%%%%%%%%%
+
 % Learning rate
 ALPHA = 0.01;
 
@@ -6,6 +10,10 @@ DEGREE = 3;
 
 % Number of iterations
 NB_ITERATION = 2000;
+
+%%%%%%%%%%%%%%%%%%%%%
+% END OF PARAMETERS %
+%%%%%%%%%%%%%%%%%%%%%
 
 % Initial theta
 theta = zeros(DEGREE + 1, 1);
@@ -41,9 +49,11 @@ end
 % Plot J
 figure('name', 'Linear regression', 'NumberTitle', 'off');
 subplot(2, 1, 1);
+hold on;
 xlabel('Iteration number');
 ylabel('Cost');
 plot(1:length(J_hist), J_hist, 'o');
+grid on;
 
 % Plot data set and regression curve
 subplot(2, 1, 2);
@@ -56,6 +66,7 @@ end
 
 plot(x, y, 'o', 'markerfacecolor', 'r', 'markersize', 10);
 hold on;
+grid on;
 plot(x_vec, y_vec, 'linewidth', 2);
 legend('Data set', 'Linear regression curve');
 
