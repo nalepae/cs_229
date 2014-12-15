@@ -80,3 +80,43 @@ Execute this file with **Octave**.
 **Octave** will plot by using the normal equation technique :
 * Data set
 * Regressed curve
+
+-------
+
+Directory **logistic_regression** :
+
+File **least_squares_1_feature_real_time.m** :
+
+Choose in the header of file :
+* Learning rate **ALPHA**
+* Initial learning parameters **INITIAL_THETA**
+* Number of iterations **NB_ITERATION**
+
+Execute this file with **Octave**.
+
+**Octave** will plot in real time, by using the gradient descent technique with least squares method :
+* The regression's cost
+* Data set
+* Regressed curve
+* 3D curve of cost in term of learning parameters
+* Learning parameters on iso-cost curves
+
+The purpose of this file is to show thate least squares method is not adapted for gradient descent technique with logistic regression (presence of local minima).
+
+File **least_squares_1_feature_final_state.m** :
+
+Choose in the header of file :
+* Learning rate **ALPHA**
+* Initial learning parameters **INITIAL_THETA**
+* Number of iterations **NB_ITERATION**
+
+Execute this file with **Octave**.
+
+**Octave** will plot for the last iteration of gradient descent technique with least squares method :
+* The regression's cost
+* Data set
+* Regressed curve
+* 3D curve of cost in term of learning parameters
+* Learning parameters on iso-cost curves
+
+The purpose of this file is to show thate least squares method is not adapted for gradient descent technique with logistic regression (presence of local minima).
