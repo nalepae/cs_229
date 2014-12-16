@@ -83,7 +83,7 @@ Execute this file with **Octave**.
 
 -------
 
-Directory **logistic_regression** :
+Directory **logistic_regression_1_feature** :
 
 File **least_squares_1_feature_real_time.m** :
 
