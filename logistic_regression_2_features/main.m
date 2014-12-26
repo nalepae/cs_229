@@ -19,7 +19,7 @@ ALPHA = 1 * 10^-9;
 DEGREE = 2;
 
 % Number of iterations
-LAST_ITERATION = 10^6;
+LAST_ITERATION = 1 * 10^5;
 
 %%%%%%%%%%%%%%%%%%%%%
 % END OF PARAMETERS %
@@ -35,7 +35,7 @@ m = size(datas)(1);
 x1 = datas(:, 1);
 x2 = datas(:, 2);
 
-X = create_x_matrix (x1, x2, DEGREE);
+X = create_x_matrix(x1, x2, DEGREE);
 y = datas(:, 3);
 
 % Initialize theta with 0 (sum of arithmetic sequence)
@@ -80,7 +80,8 @@ plot(J_history);
 hold off;
 
 % Plot of training examples and decision boundary
-subplot(2, 2, 2)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+subplot(2, 2, 2);
 
 hold on;
 grid on;
@@ -105,6 +106,7 @@ legend('Positive examples', 'Negative examples', 'Decision boundary');
 hold off;
 
 % Plot z = f(x1, x2)
+%%%%%%%%%%%%%%%%%%%%
 subplot(2, 2, 3);
 
 hold on;

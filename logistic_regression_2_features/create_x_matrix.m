@@ -10,7 +10,7 @@ function X = create_x_matrix(x1, x2, degree)
 	%      x^0 * y^3, x^1 * y^2, x^2 * y^1, x^3 * y^0]
 	
 	% Number of examples
-	m = size(x1, 1);
+	m = length(x1);
 
 	% Create column 1 for x^0 * y^0
 	X = ones(m, 1);
