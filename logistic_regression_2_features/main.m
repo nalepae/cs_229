@@ -86,6 +86,7 @@ subplot(2, 2, 2);
 hold on;
 grid on;
 
+title(' + : Positive examples, o : Negative examples, Green : Decision boundary');
 xlabel('Feature 1');
 ylabel('Feature 2');
 
@@ -99,9 +100,6 @@ plot(X(neg, 2), X(neg, 3), 'ko', 'MarkerFaceColor', 'y', 'MarkerSize', 7);
 
 % Plot decision boundary
 contour(x1_lin, x2_lin, z, [0, 0], 'LineWidth', 2);
-
-% Legend
-legend('Positive examples', 'Negative examples', 'Decision boundary');
 
 hold off;
 

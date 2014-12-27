@@ -1,9 +1,18 @@
 %% gradient_descent: Gradient descent function
-function [theta, J] = gradient_descent(X, theta, y, alpha)
-	n = length(theta);
+function [theta, theta_history, J_history] = gradient_descent(X, y, theta, alpha, num_iters)
+    % Number of training examples
+    m = length(y);
 
-	for i = 1:n
-		theta(i) += alpha * (y - X * theta)' * X(:, i);
-	end
+    % History of cost
+    J_history = zeros(num_iters, 1);
 
-	J = linear_cost_function(X, theta, y);
+    % History of theta
+    theta_history = theta;
+
+    for iter = 1:num_iters
+        [J_history(iter), grad] = cost_function(theta, X, y);
+        theta -= alpha * grad;
+
+        theta_history = [theta_history theta];
+    end
+end
