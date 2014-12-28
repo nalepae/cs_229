@@ -18,11 +18,27 @@ ALPHA = 1 * 10^-2;
 DEGREE = 1;
 
 % Number of iterations
-LAST_ITERATION = 1 * 10^3;
+LAST_ITERATION = 1 * 10^4;
+
+% Regularization parameter
+LAMBDA = 0;
 
 %%%%%%%%%%%%%%%%%%%%%
 % END OF PARAMETERS %
 %%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%
+% PLOT PARAMETERS %
+%%%%%%%%%%%%%%%%%%%
+
+% For plotting cost = f(theta_x, theta_y),
+% the choice of theta is needed.
+NUM_THETA_X = 0;
+NUM_THETA_Y = 1;
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+% END OF PLOT PARAMETERS %
+%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % Load data file
 datas = load(DATA_FILE);
@@ -37,10 +53,14 @@ theta = zeros(DEGREE + 1, 1);
 
 % Compute gradient descent
 [theta, theta_history, J_history] = gradient_descent(X, y, theta, ALPHA,
-                                                    LAST_ITERATION);
+                                                    LAST_ITERATION, LAMBDA);
 
 % Compute theta with normal equation
-theta_normal_eq = inv(X' * X) * X' * y;
+n = length(theta);
+
+R = diag([0 ; ones(n - 1, 1)]);
+
+theta_normal_eq = inv(X' * X + LAMBDA * R) * X' * y;
 
 %%%%%%%%
 % Plot %
@@ -61,7 +81,9 @@ y_lin = X_lin * theta;
 y_lin_normal_eq = X_lin * theta_normal_eq;
 
 % Computation for plotting curve Cost = f(theta_0, theta_1)
-[theta_x_lin, theta_y_lin, J_mesh] = compute_mesh_cost(0, 1, X, y, theta_history);
+[theta_x_lin, theta_y_lin, J_mesh] = compute_mesh_cost(NUM_THETA_X,
+                                                       NUM_THETA_Y, X, y,
+                                                       theta_history, LAMBDA);
 
 % Plot of cost
 %%%%%%%%%%%%%%
@@ -82,7 +104,7 @@ subplot(2, 2, 2);
 hold on;
 grid on;
 
-title('+ : Training examples, Blue : Linear regression, Green : Normal equation');
+title('+ : Training examples - Blue : Linear regression - Green : Normal equation');
 xlabel('Feature');
 ylabel('Hypothesis and training examples');
 
@@ -120,7 +142,7 @@ xlabel('\theta_0');
 ylabel('\theta_1');
 
 contour(theta_x_lin, theta_y_lin, J_mesh, 20);
-plot(theta_history(1, :), theta_history(2, :), 'LineWidth', 2);
+plot(theta_history(NUM_THETA_X + 1, :), theta_history(NUM_THETA_Y + 1, :), 'LineWidth', 2);
 
 hold off;
 
