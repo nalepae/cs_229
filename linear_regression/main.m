@@ -5,7 +5,19 @@
 % Data file
 DATA_FILE = 'datas.txt';
 
+% Minimum searsh algorithm
+% 0 : Gradient descent (all used functions are implemented from a to z),
+%     but this method can be very slow to converge, specially when degree > 1.
+%     Furthermore, you have to choose the learning rate. (Not to high
+%     otherwise the cost can diverge, not to low otherwise the convergence
+%     will be too slow.)
+%
+% 1 : Use of 'fminunc' builtin function. Less explicit than gradient descent
+%     but very quick to converge
+ALGORITHM = 0;
+
 % Learning rate
+% No effect if ALGORITHM = 1
 ALPHA = 1 * 10^-2;
 
 % Degree
@@ -49,11 +61,19 @@ X = create_x_matrix(x, DEGREE);
 y = datas(:, 2);
 
 % Initialise theta with 0
-theta = zeros(DEGREE + 1, 1);
+theta_init = zeros(DEGREE + 1, 1);
 
 % Compute gradient descent
-[theta, theta_history, J_history] = gradient_descent(X, y, theta, ALPHA,
-                                                    LAST_ITERATION, LAMBDA);
+if (ALGORITHM == 0)
+    [theta, theta_history, J_history] = gradient_descent(X, y, theta_init,
+                                                         ALPHA,
+                                                         LAST_ITERATION,
+                                                         LAMBDA);
+else
+    options = optimset('GradObj', 'on');
+    theta = fminunc(@(t)(cost_function(t, X, y, LAMBDA)), theta_init);
+end
+
 
 % Compute theta with normal equation
 n = length(theta);
@@ -83,23 +103,30 @@ y_lin_normal_eq = X_lin * theta_normal_eq;
 % Computation for plotting curve Cost = f(theta_0, theta_1)
 [theta_x_lin, theta_y_lin, J_mesh] = compute_mesh_cost(NUM_THETA_X,
                                                        NUM_THETA_Y, X, y,
-                                                       theta_history, LAMBDA);
+                                                       theta_init, theta,
+                                                       LAMBDA);
 
 % Plot of cost
 %%%%%%%%%%%%%%
-subplot(2, 2, 1);
-hold on;
-grid on;
+if (ALGORITHM == 0)
+    subplot(2, 2, 1);
+    hold on;
+    grid on;
 
-xlabel('Iteration number');
-ylabel('Cost J');
-plot(J_history);
+    xlabel('Iteration number');
+    ylabel('Cost J');
+    plot(J_history);
 
-hold off;
+    hold off;
+end
 
 % Plot of training samples and hypothesis function
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-subplot(2, 2, 2);
+if (ALGORITHM == 0)
+    subplot(2, 2, 2);
+else
+    subplot(1, 2, 2);
+end
 
 hold on;
 grid on;
@@ -119,7 +146,12 @@ hold off;
 
 % Plot of Cost = f(theta_0, theta_1)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-subplot(2, 2, 3);
+if (ALGORITHM == 0)
+    subplot(2, 2, 3);
+else
+    subplot(1, 2, 1);
+end
+
 hold on;
 grid on;
 
@@ -133,18 +165,20 @@ hold off;
 
 % Plot of cost contour
 %%%%%%%%%%%%%%%%%%%%%%
-subplot(2, 2, 4);
-hold on;
-grid on;
+if (ALGORITHM == 0)
+    subplot(2, 2, 4);
+    hold on;
+    grid on;
 
-title('Contour plot of cost and history of theta');
-xlabel('\theta_0');
-ylabel('\theta_1');
+    title('Contour plot of cost and history of theta');
+    xlabel('\theta_0');
+    ylabel('\theta_1');
 
-contour(theta_x_lin, theta_y_lin, J_mesh, 20);
-plot(theta_history(NUM_THETA_X + 1, :), theta_history(NUM_THETA_Y + 1, :), 'LineWidth', 2);
+    contour(theta_x_lin, theta_y_lin, J_mesh, 20);
+    plot(theta_history(NUM_THETA_X + 1, :), theta_history(NUM_THETA_Y + 1, :), 'LineWidth', 2);
 
-hold off;
+    hold off;
+end
 
 % Wait the user to press a key to exit
 input('Press any key to exit ...');
