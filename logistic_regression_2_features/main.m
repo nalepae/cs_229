@@ -5,8 +5,19 @@
 % Data file
 DATA_FILE  = 'datas.txt';
 
-% Learning rate
-ALPHA = 1 * 10^-9;
+% Minimum searsh algorithm
+% 0 : Gradient descent (all used functions are implemented from a to z),
+%     but this method can be very slow to converge, specially when degree > 1.
+%     Furthermore, you have to choose the learning rate. (Not to high
+%     otherwise the cost can diverge, not to low otherwise the convergence
+%     will be too slow.)
+%
+% 1 : Use of 'fminunc' builtin function. Less explicit than gradient descent
+%     but very quick to converge
+ALGORITHM = 0;
+
+% Learning rate (No effect if ALGORITHM = 1)
+ALPHA = 1 * 10^-7;
 
 % Degree
 
@@ -18,8 +29,8 @@ ALPHA = 1 * 10^-9;
 %                                                 theta_9 * x^0 * y^3
 DEGREE = 2;
 
-% Number of iterations
-LAST_ITERATION = 1 * 10^5;
+% Number of iterations (no effect if ALGORITHM = 1)
+LAST_ITERATION = 2 * 10^5;
 
 %%%%%%%%%%%%%%%%%%%%%
 % END OF PARAMETERS %
@@ -40,10 +51,17 @@ y = datas(:, 3);
 
 % Initialize theta with 0 (sum of arithmetic sequence)
 theta_size = (DEGREE + 1) * (DEGREE + 2) / 2;
-theta = zeros(theta_size, 1);
+theta_init = zeros(theta_size, 1);
 
 % Compute gradient descent
-[theta, J_history] = gradient_descent(X, y, theta, ALPHA, LAST_ITERATION);
+if (ALGORITHM == 0)
+    [theta, J_history] = gradient_descent(X, y, theta_init, ALPHA,
+                                          LAST_ITERATION);
+else
+    options = optimset('GradObj', 'on');
+    [theta, J, exit_flag] = fminunc(@(t)(cost_function(t, X, y)), theta_init,
+                                    options);
+end
 
 %%%%%%%%
 % Plot %
@@ -68,20 +86,26 @@ z = compute_z(mesh_x1, mesh_x2, theta);
 
 % Plot of cost
 %%%%%%%%%%%%%%
-subplot(2, 2, 1);
+if (ALGORITHM == 0)
+    subplot(2, 2, 1);
 
-hold on;
-grid on;
+    hold on;
+    grid on;
 
-xlabel('Iteration number');
-ylabel('Cost J');
-plot(J_history);
+    xlabel('Iteration number');
+    ylabel('Cost J');
+    plot(J_history);
 
-hold off;
+    hold off;
+end
 
 % Plot of training examples and decision boundary
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-subplot(2, 2, 2);
+if (ALGORITHM == 0)
+    subplot(2, 2, 2);
+else
+    subplot(1, 2, 2);
+end
 
 hold on;
 grid on;
@@ -105,7 +129,11 @@ hold off;
 
 % Plot z = f(x1, x2)
 %%%%%%%%%%%%%%%%%%%%
-subplot(2, 2, 3);
+if (ALGORITHM == 0)
+    subplot(2, 2, 3);
+else
+    subplot(1, 2, 1);
+end
 
 hold on;
 grid on;
