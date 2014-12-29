@@ -16,5 +16,5 @@ function [J, grad] = cost_function(theta, X, y)
     J = sum(J_vector) / -m;
 
     % Gradient vector
-    grad = X' * (hypothesis - y);
+    grad = 1 / m * X' * (hypothesis - y);
 end
