@@ -2,14 +2,16 @@
 function [theta_x_lin, theta_y_lin, J_mesh] = compute_mesh_cost(num_theta_x,
                                                                 num_theta_y,
                                                                 X, y,
-                                                                theta_history)
+                                                                theta_init,
+                                                                theta_final)
     % Inputs :
     % --------
     % num_theta_x : Number of the feature to be plotted on the x axis
     % num_theta_y : Number of the feature to be plotted on the y axis
     % X : Matrix of examples
     % y : Vector of results
-    % theta_history : History of theta
+    % theta_init : Initial theta
+    % theta_final : Final theta
 
     % Outputs :
     % ---------
@@ -20,39 +22,42 @@ function [theta_x_lin, theta_y_lin, J_mesh] = compute_mesh_cost(num_theta_x,
     % Number of discrete samples
     N = 100;
 
+    % Size of theta
+    n = length(theta_init);
+
     % Reduced X with only two features
     X_reduced = [X(:, num_theta_x + 1) ; X(:, num_theta_y + 1)];
 
     % Retrieve theta history
-    theta_x_history = theta_history(num_theta_x + 1, :)';
-    theta_y_history = theta_history(num_theta_y + 1, :)';
-
-    size_theta = length(theta_x_history);
+    theta_x_init = theta_init(num_theta_x + 1);
+    theta_x_final = theta_final(num_theta_x + 1);
+    theta_y_init = theta_init(num_theta_y + 1);
+    theta_y_final = theta_final(num_theta_y + 1);
 
     % Compute min and max for theta_x and theta_y
-    if (theta_x_history(1) < theta_x_history(size_theta))
-        minimum = theta_x_history(1);
-        maximum = theta_x_history(size_theta);
+    if (theta_x_init < theta_x_final)
+        minimum = theta_x_init;
+        maximum = theta_x_final;
 
         theta_x_min = minimum;
         theta_x_max = 2 * maximum - minimum;
     else
-        minimum = theta_x_history(size_theta);
-        maximum = theta_x_history(1);
+        minimum = theta_x_final;
+        maximum = theta_x_init;
 
         theta_x_min = 2 * minimum - maximum;
         theta_x_max = maximum;
     end
 
-    if (theta_y_history(1) < theta_y_history(size_theta))
-        minimum = theta_y_history(1);
-        maximum = theta_y_history(size_theta);
+    if (theta_y_init < theta_y_final)
+        minimum = theta_y_init;
+        maximum = theta_y_final;
 
         theta_y_min = minimum;
         theta_y_max = 2 * maximum - minimum;
     else
-        minimum = theta_y_history(size_theta);
-        maximum = theta_y_history(1);
+        minimum = theta_y_final;
+        maximum = theta_y_init;
 
         theta_y_min = 2 * minimum - maximum;
         theta_y_max = maximum;
@@ -71,11 +76,8 @@ function [theta_x_lin, theta_y_lin, J_mesh] = compute_mesh_cost(num_theta_x,
     % Mesh grid for theta_x and theta_y
     [theta_x_mesh, theta_y_mesh] = meshgrid(theta_x_lin, theta_y_lin);
 
-    % Final theta number
-    num_final_theta = size(theta_history)(2);
-
     % Initialize theta
-    theta = theta_history(:, num_final_theta);
+    theta = zeros(n, 1);
 
     % Compute cost for each value of theta_x and theta_y
     for i = 1:N
