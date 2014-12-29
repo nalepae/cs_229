@@ -3,7 +3,10 @@
 %%%%%%%%%%%%%%
 
 % Data file
-DATA_FILE  = 'datas.txt';
+% Available files  :
+% - datas_1.txt
+% - datas_2.txt
+DATA_FILE  = 'datas_1.txt';
 
 % Minimum searsh algorithm
 % 0 : Gradient descent (all used functions are implemented from a to z),
@@ -16,9 +19,6 @@ DATA_FILE  = 'datas.txt';
 %     but very quick to converge
 ALGORITHM = 0;
 
-% Learning rate (No effect if ALGORITHM = 1)
-ALPHA = 1 * 10^-7;
-
 % Degree
 
 % Example, if degree = 3,
@@ -29,8 +29,16 @@ ALPHA = 1 * 10^-7;
 %                                                 theta_9 * x^0 * y^3
 DEGREE = 2;
 
+% Learning rate (No effect if ALGORITHM = 1)
+% With DEGREE = 2
+% For datas_1.txt : Ideal 1 * 10^-7
+% For datas_2.txt : Ideal 5 * 10^3
+ALPHA = 1 * 10^-7;
+
 % Number of iterations (no effect if ALGORITHM = 1)
-LAST_ITERATION = 2 * 10^5;
+% For datas_1.txt : Ideal 5 * 10^6
+% For datas_2.txt : Ideal 5 * 10^3
+LAST_ITERATION = 5 * 10^6;
 
 %%%%%%%%%%%%%%%%%%%%%
 % END OF PARAMETERS %
