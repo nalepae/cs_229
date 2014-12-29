@@ -67,8 +67,7 @@ if (ALGORITHM == 0)
                                           LAST_ITERATION);
 else
     options = optimset('GradObj', 'on');
-    [theta, J, exit_flag] = fminunc(@(t)(cost_function(t, X, y)), theta_init,
-                                    options);
+    [theta, J] = fminunc(@(t)(cost_function(t, X, y)), theta_init, options);
 end
 
 %%%%%%%%
