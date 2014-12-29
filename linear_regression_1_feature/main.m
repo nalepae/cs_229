@@ -16,8 +16,7 @@ DATA_FILE = 'datas.txt';
 %     but very quick to converge
 ALGORITHM = 0;
 
-% Learning rate
-% No effect if ALGORITHM = 1
+% Learning rate (No effect if ALGORITHM = 1)
 ALPHA = 1 * 10^-2;
 
 % Degree
@@ -29,7 +28,7 @@ ALPHA = 1 * 10^-2;
 %     theta_3 * x^3
 DEGREE = 1;
 
-% Number of iterations
+% Number of iterations( No effect if ALGORITHM = 1)
 LAST_ITERATION = 1 * 10^4;
 
 % Regularization parameter
@@ -71,7 +70,7 @@ if (ALGORITHM == 0)
                                                          LAMBDA);
 else
     options = optimset('GradObj', 'on');
-    theta = fminunc(@(t)(cost_function(t, X, y, LAMBDA)), theta_init);
+    theta = fminunc(@(t)(cost_function(t, X, y, LAMBDA)), theta_init, options);
 end
 
 
