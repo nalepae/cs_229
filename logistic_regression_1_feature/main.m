@@ -31,6 +31,9 @@ ALPHA = 1 * 10^-2;
 % Number of iterations
 LAST_ITERATION = 5 * 10^4;
 
+% Regularization parameter
+LAMBDA = 0;
+
 %%%%%%%%%%%%%%%%%%%%%
 % END OF PARAMETERS %
 %%%%%%%%%%%%%%%%%%%%%
@@ -66,10 +69,10 @@ theta_init = zeros(DEGREE + 1, 1);
 % Compute gradient descent
 if (ALGORITHM == 0)
     [theta, theta_history, J_history] = gradient_descent(X, y, theta_init, ALPHA,
-                                                         LAST_ITERATION);
+                                                         LAST_ITERATION, LAMBDA);
 else
     options = optimset('GradObj', 'on');
-    [theta, J] = fminunc(@(t)(cost_function(t, X, y)), theta_init, options);
+    theta = fminunc(@(t)(cost_function(t, X, y, LAMBDA)), theta_init, options);
 end
 %%%%%%%%
 % Plot %
@@ -89,7 +92,8 @@ h_lin = sigmoid(x_mat * theta);
 
 [theta_x_lin, theta_y_lin, J_mesh] = compute_mesh_cost(NUM_THETA_X, NUM_THETA_Y,
                                                        X, y,
-                                                       theta_init, theta);
+                                                       theta_init, theta,
+                                                       LAMBDA);
 % Plot of cost
 %%%%%%%%%%%%%%
 if (ALGORITHM == 0)

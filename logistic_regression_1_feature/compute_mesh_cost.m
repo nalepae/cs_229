@@ -3,7 +3,8 @@ function [theta_x_lin, theta_y_lin, J_mesh] = compute_mesh_cost(num_theta_x,
                                                                 num_theta_y,
                                                                 X, y,
                                                                 theta_init,
-                                                                theta_final)
+                                                                theta_final,
+                                                                lambda)
     % Inputs :
     % --------
     % num_theta_x : Number of the feature to be plotted on the x axis
@@ -85,7 +86,7 @@ function [theta_x_lin, theta_y_lin, J_mesh] = compute_mesh_cost(num_theta_x,
             theta(num_theta_x + 1) = theta_x_mesh(i, j);
             theta(num_theta_y + 1) = theta_y_mesh(i, j);
 
-            J_mesh(i, j) = cost_function(theta, X, y);
+            J_mesh(i, j) = cost_function(theta, X, y, lambda);
         end
     end
 end
