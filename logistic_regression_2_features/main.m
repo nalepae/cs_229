@@ -6,7 +6,7 @@
 % Available files  :
 % - datas_1.txt
 % - datas_2.txt
-DATA_FILE  = 'datas_1.txt';
+DATA_FILE  = 'datas_2.txt';
 
 % Minimum searsh algorithm
 % 0 : Gradient descent (all used functions are implemented from a to z),
@@ -32,13 +32,16 @@ DEGREE = 2;
 % Learning rate (No effect if ALGORITHM = 1)
 % With DEGREE = 2
 % For datas_1.txt : Ideal 1 * 10^-7
-% For datas_2.txt : Ideal 5 * 10^3
-ALPHA = 1 * 10^-7;
+% For datas_2.txt : Ideal 5 * 10^0
+ALPHA = 5 * 10^0;
 
 % Number of iterations (no effect if ALGORITHM = 1)
 % For datas_1.txt : Ideal 5 * 10^6
 % For datas_2.txt : Ideal 5 * 10^3
-LAST_ITERATION = 5 * 10^6;
+LAST_ITERATION = 1 * 10^3;
+
+% Regularization parameter
+LAMBDA = 0;
 
 %%%%%%%%%%%%%%%%%%%%%
 % END OF PARAMETERS %
@@ -64,10 +67,10 @@ theta_init = zeros(theta_size, 1);
 % Compute gradient descent
 if (ALGORITHM == 0)
     [theta, J_history] = gradient_descent(X, y, theta_init, ALPHA,
-                                          LAST_ITERATION);
+                                          LAST_ITERATION, LAMBDA);
 else
     options = optimset('GradObj', 'on');
-    [theta, J] = fminunc(@(t)(cost_function(t, X, y)), theta_init, options);
+    theta = fminunc(@(t)(cost_function(t, X, y, LAMBDA)), theta_init, options);
 end
 
 %%%%%%%%
