@@ -74,7 +74,9 @@ mat_p = reshape(p, display_cols, display_rows)';
 
 printf('\n');
 mat_p
-mat_max_prob
+
+% Uncomment if you want to print the matrix of probabilities
+%mat_max_prob
 
 % Display the digits to guess
 display_data(digits_to_guess);
