@@ -18,11 +18,8 @@ function [J, grad] = cost_function(theta, X, y, lambda)
     % Hypothesis vector
     hypothesis = sigmoid(Xtheta);
 
-    % Probabilistic vectorial part
-    prob_vec_part = y .* log(hypothesis) + (1 - y) .* log(1 - hypothesis);
-
     % Probabilistic part
-    probabilistic_part = - sum(prob_vec_part);
+    probabilistic_part = - (y' * log(hypothesis) + (1 - y)' * log(1 - hypothesis));
 
     % Regularization part
     regularization_part = lambda / 2 * theta' * r;
