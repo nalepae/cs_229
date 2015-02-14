@@ -10,9 +10,6 @@
 % - An offset neuron is also added
 %
 % The user can choose the number of neurons of the hidden layer
-%
-% TO DO : Implement gradient checking to be sure that there is
-% no bug in back propagation.
 
 %%%%%%%%%%%%%%
 % PARAMETERS %
@@ -37,6 +34,9 @@ ITERATIONS_MAX_NUMBER = 50;
 % 0 : No
 % 1 : Yes
 GRADIENT_CHECKING = 0;
+
+% Epsilon if gradient checking is activated
+EPSILON = 0.0001;
 
 %%%%%%%%%%%%%%%%%%%%%
 % END OF PARAMETERS %
@@ -101,8 +101,9 @@ initial_params = [initial_theta_1(:) ; initial_theta_2(:)];
 options = optimset('GradObj', 'on', 'MaxIter', ITERATIONS_MAX_NUMBER);
 
 % Train the neural network
-[params cost] = fminunc(@(p) cost_function(p, n, HIDDEN_LAYER_SIZE, num_labels,
-                                           X, y, LAMBDA, GRADIENT_CHECKING),
+[params cost] = fminunc(@(p) theta_cost(p, n, HIDDEN_LAYER_SIZE, num_labels,
+                                           X, y, LAMBDA, GRADIENT_CHECKING,
+                                           EPSILON),
                         initial_params, options);
 printf('\n');
 
