@@ -4,7 +4,7 @@
 % - 1 hidden layer
 % - 1 output layer
 %
-% The input layer has 401 neurons : 
+% The input layer has 401 neurons :
 % - Each image of hand written digit is a 20x20 = 400 array of pixels
 %   (the value of each pixel is between 0 and 1)
 % - An offset neuron is also added
@@ -101,9 +101,8 @@ initial_params = [initial_theta_1(:) ; initial_theta_2(:)];
 options = optimset('GradObj', 'on', 'MaxIter', ITERATIONS_MAX_NUMBER);
 
 % Train the neural network
-[params cost] = fminunc(@(p) cost_function(p, n,
-	                                       HIDDEN_LAYER_SIZE, num_labels, X,
-	                                       y, LAMBDA, GRADIENT_CHECKING),
+[params cost] = fminunc(@(p) cost_function(p, n, HIDDEN_LAYER_SIZE, num_labels,
+                                           X, y, LAMBDA, GRADIENT_CHECKING),
                         initial_params, options);
 printf('\n');
 
@@ -135,4 +134,5 @@ mat_p
 display_data(digits_to_guess);
 
 % Wait the user to press a key to exit
-input('Press any key to exit ...');
+printf('Press any key to exit ...\n');
+pause();

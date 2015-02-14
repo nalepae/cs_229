@@ -3,12 +3,12 @@ function [J grad] = cost_function(params, n,
                                   hidden_layer_size, num_labels,
                                   X, y, lambda, gradient_checking)
 
-	% params contains the weights matrices (between the input layer and the hidden
-	% layer and between the hidden layer and the output layer) in one linear
-	% vector.
+	% params contains the weights matrices (between the input layer and the
+	% hidden layer and between the hidden layer and the output layer) in one
+    % linear vector.
 	%
 	%This part reshape this one linear vector in two matrices
-	theta_1 = reshape(params(1 : hidden_layer_size * n), 
+	theta_1 = reshape(params(1 : hidden_layer_size * n),
 		              hidden_layer_size, n);
 
 	theta_2 = reshape(params(1 + hidden_layer_size * n : end),

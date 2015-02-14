@@ -22,7 +22,7 @@ ALGORITHM = 0;
 % Degree
 
 % Example, if degree = 3,
-% z = theta_O * x^0 * y^0 + 
+% z = theta_O * x^0 * y^0 +
 %     theta_1 * x^1 * y^0 + theta_2 * x^0 + y^1 +
 %     theta_3 * x^2 * y^0 + theta_4 * x^1 * y^1 + theta_5 * x^1 * y^2 +
 %     theta_6 * x^3 * y^1 + theta_7 * x^2 * y^1 + theta_8 * x^1 * y^2 +
@@ -157,4 +157,5 @@ mesh(x1_lin, x2_lin, z);
 hold off;
 
 % Wait the user to press a key to exit
-input('Press any key to exit ...');
+printf('Press any key to exit ...\n');
+pause();

@@ -45,7 +45,7 @@ rand_indices = randperm(num_digits);
 digits_to_guess = digits_matrix(rand_indices(1:NUM_DIGIT_TO_GUESS), :);
 
 % Digits used for training
-training_digits = digits_matrix(rand_indices(NUM_DIGIT_TO_GUESS+1:num_digits), 
+training_digits = digits_matrix(rand_indices(NUM_DIGIT_TO_GUESS+1:num_digits),
 	                            :);
 
 % Number of training examples
@@ -82,4 +82,5 @@ mat_p
 display_data(digits_to_guess);
 
 % Wait the user to press a key to exit
-input('Press any key to exit ...');
+printf('Press any key to exit ...\n');
+pause();

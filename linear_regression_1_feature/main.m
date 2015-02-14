@@ -180,4 +180,5 @@ if (ALGORITHM == 0)
 end
 
 % Wait the user to press a key to exit
-input('Press any key to exit ...');
+printf('Press any key to exit ...\n');
+pause();

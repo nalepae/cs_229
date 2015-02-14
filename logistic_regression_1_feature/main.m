@@ -168,11 +168,12 @@ if (ALGORITHM == 0)
     ylabel('\theta_1');
 
     contour(theta_x_lin, theta_y_lin, J_mesh, 30);
-    plot(theta_history(NUM_THETA_X + 1, :), theta_history(NUM_THETA_Y + 1, :), 
+    plot(theta_history(NUM_THETA_X + 1, :), theta_history(NUM_THETA_Y + 1, :),
          'LineWidth', 2);
 
     hold off;
 end
 
 % Wait the user to press a key to exit
-input('Press any key to exit ...');
+printf('Press any key to exit ...\n');
+pause();
