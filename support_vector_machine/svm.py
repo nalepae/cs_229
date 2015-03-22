@@ -23,10 +23,12 @@ class SupportVectorMachine(object):
         # Initialise threshold to 0
         self.b = 0
 
-    def w(self):
+    def _get_w(self):
         """Compute normal hyperplane vector"""
         return self.X.T.dot(self.y * self.alphas)
 
+    w = property(_get_w)
+
     def h(self, vector):
         """Compute the hypothesis for the vector 'vector'"""
-        return self.w().dot(vector) + self.b
+        return self.w.dot(vector) + self.b
