@@ -22,7 +22,7 @@ class SupportVectorMachine(object):
         self.alphas_or_b_changed = True
 
         # Number of training examples and features
-        (self.m, self.n) = datas.shape
+        (self.m, self.n) = self.X.shape
 
         # Create list of lagrange multipliers _alphas, and initialise it to 0
         self._alphas = np.zeros(self.m)
@@ -74,7 +74,6 @@ class SupportVectorMachine(object):
 
         r2 = y2 * E2
 
-        # What about the case r == 0 and (alpha == 0 or alpha == C) ?
         if r2 < -self.tol and alpha2 < self.C or r2 > self.tol and alpha2 > 0:
             # Try to optimise non bounded values first
             # It means that at least an other on exists
@@ -105,7 +104,7 @@ class SupportVectorMachine(object):
                         return True
         return False
 
-    def take_step(self, i2, i1):
+    def take_step(self, i1, i2):
         if i2 == i1:
             return False
 
@@ -124,7 +123,7 @@ class SupportVectorMachine(object):
         # Compute L and H
         if s != 1:
             L = max(0, alpha2 - alpha1)
-            H = min(self.C, self.C + alpha2 + alpha1)
+            H = min(self.C, self.C + alpha2 - alpha1)
         else:
             L = max(0, alpha1 + alpha2 - self.C)
             H = min(self.C, alpha1 + alpha2)
@@ -156,7 +155,7 @@ class SupportVectorMachine(object):
             alpha2_new = self.C
 
         # Compute alpha1_new
-        alpha1_new = alpha1 * s * (alpha2_new - alpha2)
+        alpha1_new = alpha1 + s * (alpha2 - alpha2_new)
 
         # Compute b_new
         b1 = E1 + y1 * (alpha1_new - alpha1) * k11 + \
@@ -168,7 +167,6 @@ class SupportVectorMachine(object):
         if alpha1_new not in (0, self.C) and alpha2_new not in (0, self.C):
             b_new = b1  # = b2
         else:
-            print b1, b2
             b_new = (b1 + b2) / 2
 
         self.b = b_new
