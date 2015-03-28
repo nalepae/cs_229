@@ -79,7 +79,7 @@ class SupportVectorMachine(object):
             # Try to optimise non bounded values first
             # It means that at least an other on exists
             if (self.alphas == 0).sum() + (self.alphas == self.C).sum() >= 2:
-                # Second choice heuristic
+                # First, begin by second choice heuristic
                 max_error_diff = 0
                 i1 = None
                 for position, error_diff in \
@@ -89,11 +89,25 @@ class SupportVectorMachine(object):
                         max_error_diff = error_diff
                         i1 = position
 
-            self.take_step(i1, i2)
+                if self.take_step(i1, i2):
+                    return True
+
+                # If second choice heuristic is not successful, loop over all
+                # non-zero and non-C alphas
+                for i1, value in enumerate(self.alphas):
+                    if value not in (0, self.C):
+                        if self.take_step(i1, i2):
+                            return True
+
+                # If no non-zero and non-C alphas, loop over all alphas
+                for i1, value in enumerate(self.alphas):
+                    if self.take_step(i1, i2):
+                        return True
+        return False
 
     def take_step(self, i2, i1):
         if i2 == i1:
-            return 0
+            return False
 
         x1 = self.X[i1]
         y1 = self.Y[i1]
@@ -116,22 +130,54 @@ class SupportVectorMachine(object):
             H = min(self.C, alpha1 + alpha2)
 
         if L == H:
-            return 0
+            return False
 
+        # Compute needed kernels
         # For the moment, only linear kernel is taken into account
         k11 = x1.dot(x1)
         k12 = x1.dot(x2)
         k22 = x2.dot(x2)
 
+        # Compute eta
         eta = 2 * k12 - k11 - k22
 
-        if eta < 0:
-            a2 = alpha2 - y2 * (E1 - E2) / eta
-            if a2 < L:
-                a2 = L
-            elif a2 > H:
-                a2 = H
+        # Compute alpha2_new
+        # For the moment the case eta = 0 (means that x1 = x2) is not taken
+        # into account. (It will throw an exception)
+        alpha2_new = alpha2 - y2 * (E1 - E2) / eta
+        if alpha2_new < L:
+            alpha2_new = L
+        elif alpha2_new > H:
+            alpha2_new = H
+
+        if alpha2_new < 1e-8:
+            alpha2_new = 0
+        elif alpha2_new > self.C - 1e-8:
+            alpha2_new = self.C
+
+        # Compute alpha1_new
+        alpha1_new = alpha1 * s * (alpha2_new - alpha2)
+
+        # Compute b_new
+        b1 = E1 + y1 * (alpha1_new - alpha1) * k11 + \
+            y2 * (alpha2_new - alpha2) * k12 + self.b
+
+        b2 = E2 + y1 * (alpha1_new - alpha1) * k12 + \
+            y2 * (alpha2_new - alpha2) * k22 + self.b
+
+        if alpha1_new not in (0, self.C) and alpha2_new not in (0, self.C):
+            b_new = b1  # = b2
         else:
+            print b1, b2
+            b_new = (b1 + b2) / 2
+
+        self.b = b_new
+
+        # Store alpha1_new and alpha2_new
+        self.alphas[i1] = alpha1_new
+        self.alphas[i2] = alpha2_new
+
+        return True
 
     def h(self, vector):
         """Compute the hypothesis for the vector 'vector'"""
@@ -150,5 +196,14 @@ class SupportVectorMachine(object):
             num_changed = 0
 
             if examine_all:
-                for i2 in range(self.m):
-                    num_changed += self._examine_example(i2)
+                for i in range(self.m):
+                    num_changed += self._examine_example(i)
+            else:
+                for i, value in enumerate(self.alphas):
+                    if value not in (0, self.C):
+                        num_changed += self._examine_example(i)
+
+            if examine_all:
+                examine_all = False
+            elif num_changed == 0:
+                examine_all = True
