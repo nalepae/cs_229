@@ -222,18 +222,17 @@ class SupportVectorMachine(object):
         # Plot separator hyperplane
 
         # Find minimum and maximum for both axis
-        # min_x = data_matrix[:, 0].min()
-        # max_x = data_matrix[:, 0].max()
-        # min_y = data_matrix[:, 1].min()
-        # max_y = data_matrix[:, 1].max()
+        min_x, max_x = self.X[:, 0].min(), self.X[:, 0].max()
+        min_y, max_y = self.X[:, 1].min(), self.X[:, 1].max()
 
-        # lin_x = np.arange(min_x, max_x, 0.1)
-        # lin_y = np.arange(min_y, max_y, 0.1)
+        lin_x = np.linspace(min_x, max_x, 100)
+        lin_y = np.linspace(min_y, max_y, 100)
 
-        # xx, yy = np.meshgrid(lin_x, lin_y)
+        xx, yy = np.meshgrid(lin_x, lin_y)
 
-        # ver_h = np.vectorize(self.h)
-        # Z = ver_h([xx, yy])
+        data_matrix = np.zeros((100, 100, 2))
+        data_matrix[:, :, 0] = xx
+        data_matrix[:, :, 1] = yy
 
         plt.grid(True)
         plt.show()
