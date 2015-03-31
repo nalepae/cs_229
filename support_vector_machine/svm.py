@@ -4,6 +4,7 @@
 """
 
 import numpy as np
+import matplotlib.pyplot as plt
 
 DEFAULT_TOL = 0.02
 
@@ -67,6 +68,7 @@ class SupportVectorMachine(object):
     b = property(_get_b, _set_b)
 
     def _examine_example(self, i2):
+        """BLABLABLA"""
         x2 = self.X[i2]
         y2 = self.Y[i2]
         alpha2 = self.alphas[i2]
@@ -205,3 +207,33 @@ class SupportVectorMachine(object):
                 examine_all = False
             elif num_changed == 0:
                 examine_all = True
+
+    def plot(self):
+        """BLABLABLA"""
+
+        # Plot positive examples
+        positive_examples = self.X[self.Y == 1]
+        plt.plot(positive_examples[:, 0], positive_examples[:, 1], 'go')
+
+        # Plot negative examples
+        negative_examples = self.X[self.Y == -1]
+        plt.plot(negative_examples[:, 0], negative_examples[:, 1], 'ro')
+
+        # Plot separator hyperplane
+
+        # Find minimum and maximum for both axis
+        # min_x = data_matrix[:, 0].min()
+        # max_x = data_matrix[:, 0].max()
+        # min_y = data_matrix[:, 1].min()
+        # max_y = data_matrix[:, 1].max()
+
+        # lin_x = np.arange(min_x, max_x, 0.1)
+        # lin_y = np.arange(min_y, max_y, 0.1)
+
+        # xx, yy = np.meshgrid(lin_x, lin_y)
+
+        # ver_h = np.vectorize(self.h)
+        # Z = ver_h([xx, yy])
+
+        plt.grid(True)
+        plt.show()
