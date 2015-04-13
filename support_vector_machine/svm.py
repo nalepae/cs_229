@@ -184,7 +184,7 @@ class SupportVectorMachine(object):
 
     def h(self, vector):
         """Compute the hypothesis for the vector 'vector'"""
-        return self.w.dot(vector) + self.b
+        return self.w.dot(vector) - self.b
 
     def train(self):
         """Train the support vector machine"""
