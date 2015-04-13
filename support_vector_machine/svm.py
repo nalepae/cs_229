@@ -138,9 +138,9 @@ class SupportVectorMachine(object):
 
         # Compute needed kernels
         # For the moment, only linear kernel is taken into account
-        k11 = x1.dot(x1)
-        k12 = x1.dot(x2)
-        k22 = x2.dot(x2)
+        k11 = np.dot(x1, x1)
+        k12 = np.dot(x1, x2)
+        k22 = np.dot(x2, x2)
 
         # Compute eta
         eta = 2 * k12 - k11 - k22
