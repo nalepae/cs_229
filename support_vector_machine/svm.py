@@ -9,6 +9,7 @@ import matplotlib.pyplot as plt
 DEFAULT_TOL = 0.02
 DEFAULT_MESH_X = 100
 DEFAULT_MESH_Y = 100
+DEFAULT_RELATIVE_MARGIN = 0.2
 
 
 class SupportVectorMachine(object):
@@ -225,8 +226,14 @@ class SupportVectorMachine(object):
         min_x, max_x = self.X[:, 0].min(), self.X[:, 0].max()
         min_y, max_y = self.X[:, 1].min(), self.X[:, 1].max()
 
-        lin_x = np.linspace(min_x, max_x, mesh_x)
-        lin_y = np.linspace(min_y, max_y, mesh_y)
+        delta_x = max_x - min_x
+        delta_y = max_y - min_y
+
+        margin_x = DEFAULT_RELATIVE_MARGIN * delta_x
+        margin_y = DEFAULT_RELATIVE_MARGIN * delta_y
+
+        lin_x = np.linspace(min_x - margin_x, max_x + margin_x, mesh_x)
+        lin_y = np.linspace(min_y - margin_y, max_y + margin_y, mesh_y)
 
         xx, yy = np.meshgrid(lin_x, lin_y)
 
