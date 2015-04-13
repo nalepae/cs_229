@@ -7,6 +7,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 DEFAULT_TOL = 0.02
+DEFAULT_MESH_X = 100
+DEFAULT_MESH_Y = 100
 
 
 class SupportVectorMachine(object):
@@ -208,8 +210,8 @@ class SupportVectorMachine(object):
             elif num_changed == 0:
                 examine_all = True
 
-    def plot(self):
-        """BLABLABLA"""
+    def plot(self, mesh_x=DEFAULT_MESH_X, mesh_y=DEFAULT_MESH_Y):
+        """Plot training examples and separator hyperplane"""
 
         # Plot positive examples
         positive_examples = self.X[self.Y == 1]
@@ -220,19 +222,24 @@ class SupportVectorMachine(object):
         plt.plot(negative_examples[:, 0], negative_examples[:, 1], 'ro')
 
         # Plot separator hyperplane
-
-        # Find minimum and maximum for both axis
         min_x, max_x = self.X[:, 0].min(), self.X[:, 0].max()
         min_y, max_y = self.X[:, 1].min(), self.X[:, 1].max()
 
-        lin_x = np.linspace(min_x, max_x, 100)
-        lin_y = np.linspace(min_y, max_y, 100)
+        lin_x = np.linspace(min_x, max_x, mesh_x)
+        lin_y = np.linspace(min_y, max_y, mesh_y)
 
         xx, yy = np.meshgrid(lin_x, lin_y)
 
-        data_matrix = np.zeros((100, 100, 2))
+        data_matrix = np.empty((mesh_x, mesh_y, 2))
         data_matrix[:, :, 0] = xx
         data_matrix[:, :, 1] = yy
+
+        zz = np.empty((mesh_x, mesh_y))
+        for i in range(zz.shape[0]):
+            for j in range(zz.shape[1]):
+                zz[i, j] = self.h(data_matrix[i, j])
+
+        plt.contour(xx, yy, zz, levels=[0])
 
         plt.grid(True)
         plt.show()
