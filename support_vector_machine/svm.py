@@ -6,7 +6,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-DEFAULT_TOL = 0.02
+DEFAULT_TOL = 0.0001
 DEFAULT_MESH_X = 100
 DEFAULT_MESH_Y = 100
 DEFAULT_RELATIVE_MARGIN = 0.2
@@ -36,9 +36,6 @@ class SupportVectorMachine(object):
 
         # Initialise hyperplane normal vector _w to 0
         self._w = np.zeros(self.n)
-
-        self.errors = np.array([self.h(x) - y for (x, y) in
-                                zip(self.X, self.Y)])
 
     def _get_alphas(self):
         """Get _alphas"""
@@ -79,34 +76,11 @@ class SupportVectorMachine(object):
 
         r2 = y2 * E2
 
-        if r2 < -self.tol and alpha2 < self.C or r2 > self.tol and alpha2 > 0:
-            # Try to optimise non bounded values first
-            # It means that at least an other on exists
-            if (self.alphas == 0).sum() + (self.alphas == self.C).sum() >= 2:
-                # First, begin by second choice heuristic
-                max_error_diff = 0
-                i1 = None
-                for position, error_diff in \
-                        enumerate(abs(self.errors - E2)):
-
-                    if error_diff > max_error_diff:
-                        max_error_diff = error_diff
-                        i1 = position
-
+        if r2 < - self.tol and alpha2 < self.C or r2 > self.tol and alpha2 > 0:
+            for i1 in range(self.m):
                 if self.take_step(i1, i2):
                     return True
 
-                # If second choice heuristic is not successful, loop over all
-                # non-zero and non-C alphas
-                for i1, value in enumerate(self.alphas):
-                    if value not in (0, self.C):
-                        if self.take_step(i1, i2):
-                            return True
-
-                # If no non-zero and non-C alphas, loop over all alphas
-                for i1, value in enumerate(self.alphas):
-                    if self.take_step(i1, i2):
-                        return True
         return False
 
     def take_step(self, i1, i2):
@@ -188,28 +162,13 @@ class SupportVectorMachine(object):
 
     def train(self):
         """Train the support vector machine"""
+        one_change_at_least = True
 
-        # TODO : write comment
-        num_changed = 0
-
-        # TODO : write comment
-        examine_all = True
-
-        while num_changed > 0 or examine_all:
-            num_changed = 0
-
-            if examine_all:
-                for i in range(self.m):
-                    num_changed += self._examine_example(i)
-            else:
-                for i, value in enumerate(self.alphas):
-                    if value not in (0, self.C):
-                        num_changed += self._examine_example(i)
-
-            if examine_all:
-                examine_all = False
-            elif num_changed == 0:
-                examine_all = True
+        while one_change_at_least:
+            one_change_at_least = False
+            for i2 in range(self.m):
+                if self._examine_example(i2):
+                    one_change_at_least = True
 
     def plot(self, mesh_x=DEFAULT_MESH_X, mesh_y=DEFAULT_MESH_Y):
         """Plot training examples and separator hyperplane"""
