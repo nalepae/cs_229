@@ -8,8 +8,8 @@ def main():
     datas = np.genfromtxt("datas.csv", delimiter=',')
     problem = svm.SupportVectorMachine(datas, 1000)
 
+    problem.train()
     problem.plot()
-
 
 if __name__ == '__main__':
     main()
