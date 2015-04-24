@@ -67,7 +67,7 @@ class SupportVectorMachine(object):
     alphas = property(_get_alphas, _set_alphas)
     b = property(_get_b, _set_b)
 
-    def _examine_example(self, i2):
+    def examine_example(self, i2):
         """BLABLABLA"""
         x2 = self.X[i2]
         y2 = self.Y[i2]
@@ -167,7 +167,7 @@ class SupportVectorMachine(object):
         while one_change_at_least:
             one_change_at_least = False
             for i2 in range(self.m):
-                if self._examine_example(i2):
+                if self.examine_example(i2):
                     one_change_at_least = True
 
     def plot(self, mesh_x=DEFAULT_MESH_X, mesh_y=DEFAULT_MESH_Y):
