@@ -6,7 +6,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-DEFAULT_TOL = 0.0001
+DEFAULT_TOL = 1e-8
 DEFAULT_MESH_X = 100
 DEFAULT_MESH_Y = 100
 DEFAULT_RELATIVE_MARGIN = 0.2
