@@ -133,6 +133,9 @@ class SupportVectorMachine(object):
         elif alpha2_new > self.C - 1e-8:
             alpha2_new = self.C
 
+        if alpha2_new == alpha2:
+            return False
+
         # Compute alpha1_new
         alpha1_new = alpha1 + s * (alpha2 - alpha2_new)
 
