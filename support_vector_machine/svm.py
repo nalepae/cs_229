@@ -14,7 +14,7 @@ DEFAULT_RELATIVE_MARGIN = 0.2
 
 class SupportVectorMachine(object):
 
-    """This class describe a support vector machine (SVM)"""
+    """This class describes a support vector machine (SVM)"""
 
     def __init__(self, datas, C, tol=DEFAULT_TOL):
         self.C = C
@@ -68,7 +68,7 @@ class SupportVectorMachine(object):
     b = property(_get_b, _set_b)
 
     def examine_example(self, i2):
-        """BLABLABLA"""
+        """Examine the training example i2 and optimisate it if needed"""
         x2 = self.X[i2]
         y2 = self.Y[i2]
         alpha2 = self.alphas[i2]
