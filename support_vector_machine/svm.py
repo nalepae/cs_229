@@ -11,16 +11,22 @@ DEFAULT_MESH_X = 100
 DEFAULT_MESH_Y = 100
 DEFAULT_RELATIVE_MARGIN = 0.2
 
+KERNEL_LINEAR = 0
+KERNEL_GAUSSIAN = 1
+
 
 class SupportVectorMachine(object):
 
     """This class describes a support vector machine (SVM)"""
 
-    def __init__(self, datas, C, tol=DEFAULT_TOL):
+    def __init__(self, datas, C, tol=DEFAULT_TOL, chosen_kernel=KERNEL_LINEAR):
+        self.chosen_kernel = chosen_kernel
         self.C = C
         self.tol = tol
 
-        self.X = datas[:, :-1]
+        if self.chosen_kernel == KERNEL_LINEAR:
+            self.X = datas[:, :-1]
+
         self.Y = datas[:, -1]
 
         self.alphas_or_b_changed = True
@@ -83,7 +89,13 @@ class SupportVectorMachine(object):
 
         return False
 
+    def kernel(self, x1, x2):
+        """Kernel function"""
+        if self.chosen_kernel == KERNEL_LINEAR:
+            return np.dot(x1, x2)
+
     def take_step(self, i1, i2):
+        """Take an optimisation step with training examples i1 and i2"""
         if i2 == i1:
             return False
 
@@ -112,9 +124,9 @@ class SupportVectorMachine(object):
 
         # Compute needed kernels
         # For the moment, only linear kernel is taken into account
-        k11 = np.dot(x1, x1)
-        k12 = np.dot(x1, x2)
-        k22 = np.dot(x2, x2)
+        k11 = self.kernel(x1, x1)
+        k12 = self.kernel(x1, x2)
+        k22 = self.kernel(x2, x2)
 
         # Compute eta
         eta = 2 * k12 - k11 - k22
