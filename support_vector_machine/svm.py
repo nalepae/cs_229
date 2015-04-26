@@ -89,11 +89,6 @@ class SupportVectorMachine(object):
 
         return False
 
-    def kernel(self, x1, x2):
-        """Kernel function"""
-        if self.chosen_kernel == KERNEL_LINEAR:
-            return np.dot(x1, x2)
-
     def take_step(self, i1, i2):
         """Take an optimisation step with training examples i1 and i2"""
         if i2 == i1:
