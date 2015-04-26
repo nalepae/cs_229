@@ -43,6 +43,10 @@ class SupportVectorMachine(object):
         # Initialise hyperplane normal vector _w to 0
         self._w = np.zeros(self.n)
 
+    def gauss(self, x1, x2):
+        v = x1 - x2
+        return np.exp(- np.dot(v, v) / (2 * self.sigma ** 2))
+
     def _get_alphas(self):
         """Get _alphas"""
         return self._alphas
