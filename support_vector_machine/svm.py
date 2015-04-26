@@ -10,6 +10,8 @@ DEFAULT_TOL = 1e-8
 DEFAULT_MESH_X = 100
 DEFAULT_MESH_Y = 100
 DEFAULT_RELATIVE_MARGIN = 0.2
+DEFAULT_SIGMA = 1
+
 
 KERNEL_LINEAR = 0
 KERNEL_GAUSSIAN = 1
@@ -19,13 +21,26 @@ class SupportVectorMachine(object):
 
     """This class describes a support vector machine (SVM)"""
 
-    def __init__(self, datas, C, tol=DEFAULT_TOL, chosen_kernel=KERNEL_LINEAR):
+    def __init__(self, datas, C, chosen_kernel=KERNEL_LINEAR,
+                 sigma=DEFAULT_SIGMA, tol=DEFAULT_TOL):
+        self.tol = tol
         self.chosen_kernel = chosen_kernel
         self.C = C
-        self.tol = tol
+        self.sigma = sigma
 
         if self.chosen_kernel == KERNEL_LINEAR:
             self.X = datas[:, :-1]
+            self.X_attributes = self.X
+        elif self.chosen_kernel == KERNEL_GAUSSIAN:
+            self.X_attributes = datas[:, :-1]
+            m = self.X_attributes.shape[0]
+
+            self.X = np.empty((m, m))
+            for i in range(m):
+                for j in range(m):
+                    x1 = self.X_attributes[i]
+                    x2 = self.X_attributes[j]
+                    self.X[i, j] = self.gauss(x1, x2)
 
         self.Y = datas[:, -1]
 
@@ -123,9 +138,9 @@ class SupportVectorMachine(object):
 
         # Compute needed kernels
         # For the moment, only linear kernel is taken into account
-        k11 = self.kernel(x1, x1)
-        k12 = self.kernel(x1, x2)
-        k22 = self.kernel(x2, x2)
+        k11 = np.dot(x1, x1)
+        k12 = np.dot(x1, x2)
+        k22 = np.dot(x2, x2)
 
         # Compute eta
         eta = 2 * k12 - k11 - k22
@@ -174,6 +189,17 @@ class SupportVectorMachine(object):
         """Compute the hypothesis for the vector 'vector'"""
         return np.dot(self.w, vector) - self.b
 
+    def h_plot(self, vector):
+        """Compute the hypothesis for the vector 'vector' in initial space"""
+        if self.chosen_kernel == KERNEL_LINEAR:
+            return self.h(vector)
+        elif self.chosen_kernel == KERNEL_GAUSSIAN:
+            vector_upspace = np.empty(self.m)
+            for i in range(self.m):
+                vector_upspace[i] = self.gauss(vector, self.X_attributes[i])
+
+            return self.h(vector_upspace)
+
     def train(self):
         """Train the support vector machine"""
         one_change_at_least = True
@@ -188,16 +214,18 @@ class SupportVectorMachine(object):
         """Plot training examples and separator hyperplane"""
 
         # Plot positive examples
-        positive_examples = self.X[self.Y == 1]
+        positive_examples = self.X_attributes[self.Y == 1]
         plt.plot(positive_examples[:, 0], positive_examples[:, 1], 'go')
 
         # Plot negative examples
-        negative_examples = self.X[self.Y == -1]
+        negative_examples = self.X_attributes[self.Y == -1]
         plt.plot(negative_examples[:, 0], negative_examples[:, 1], 'ro')
 
         # Plot separator hyperplane
-        min_x, max_x = self.X[:, 0].min(), self.X[:, 0].max()
-        min_y, max_y = self.X[:, 1].min(), self.X[:, 1].max()
+        min_x, max_x = self.X_attributes[
+            :, 0].min(), self.X_attributes[:, 0].max()
+        min_y, max_y = self.X_attributes[
+            :, 1].min(), self.X_attributes[:, 1].max()
 
         delta_x = max_x - min_x
         delta_y = max_y - min_y
@@ -217,7 +245,7 @@ class SupportVectorMachine(object):
         zz = np.empty((mesh_x, mesh_y))
         for i in range(zz.shape[0]):
             for j in range(zz.shape[1]):
-                zz[i, j] = self.h(data_matrix[i, j])
+                zz[i, j] = self.h_plot(data_matrix[i, j])
 
         plt.contour(xx, yy, zz, levels=[0])
 
