@@ -247,7 +247,8 @@ class SupportVectorMachine(object):
             for j in range(zz.shape[1]):
                 zz[i, j] = self.h_plot(data_matrix[i, j])
 
-        plt.contour(xx, yy, zz, levels=[0])
+        plt.contour(xx, yy, zz, levels=[-1, 0, 1], colors=('r', 'b', 'g'),
+                    linestyles = ('dashed', 'solid', 'dashed'))
 
         plt.grid(True)
         plt.show()
