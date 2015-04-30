@@ -59,8 +59,18 @@ class SupportVectorMachine(object):
         self._w = np.zeros(self.n)
 
     def gauss(self, x1, x2):
-        v = x1 - x2
-        return np.exp(- np.dot(v, v) / (2 * self.sigma ** 2))
+        nb_row = x1.shape[0]
+        nb_col = x1.shape[1]
+        nb_item = nb_row * nb_col
+
+        x1_flat = x1.reshape(nb_item, -1)
+        x2_flat = x2.reshape(nb_item, -1)
+
+        v = x1_flat - x2_flat
+        result_flat = np.array([np.exp(- np.dot(item, item) /
+                                       (2 * self.sigma ** 2)) for item in v])
+
+        return result_flat.reshape(nb_row, nb_col)
 
     def _get_alphas(self):
         """Get _alphas"""
@@ -97,7 +107,7 @@ class SupportVectorMachine(object):
         x2 = self.X[i2]
         y2 = self.Y[i2]
         alpha2 = self.alphas[i2]
-        E2 = self.h(x2) - y2
+        E2 = self.h(np.array([[x2]])) - y2
 
         r2 = y2 * E2
 
@@ -116,12 +126,12 @@ class SupportVectorMachine(object):
         x1 = self.X[i1]
         y1 = self.Y[i1]
         alpha1 = self.alphas[i1]
-        E1 = self.h(x1) - y1
+        E1 = self.h(np.array([[x1]])) - y1
 
         x2 = self.X[i2]
         y2 = self.Y[i2]
         alpha2 = self.alphas[i2]
-        E2 = self.h(x2) - y2
+        E2 = self.h(np.array([[x2]])) - y2
 
         s = y1 * y2
 
@@ -187,7 +197,12 @@ class SupportVectorMachine(object):
 
     def h(self, vector):
         """Compute the hypothesis for the vector 'vector'"""
-        return np.dot(self.w, vector) - self.b
+        nb_row, nb_col = vector.shape[0:-1]
+        vector_flat = vector.reshape(nb_row, -1)
+        print vector_flat.shape
+        result_flat = np.array([np.dot(self.w, item) - self.b
+                                for item in vector_flat])
+        return result_flat.reshape((nb_row, nb_col))
 
     def h_plot(self, vector):
         """Compute the hypothesis for the vector 'vector' in initial space"""
@@ -242,13 +257,15 @@ class SupportVectorMachine(object):
         data_matrix[:, :, 0] = xx
         data_matrix[:, :, 1] = yy
 
-        zz = np.empty((mesh_x, mesh_y))
-        for i in range(zz.shape[0]):
-            for j in range(zz.shape[1]):
-                zz[i, j] = self.h_plot(data_matrix[i, j])
+        # zz = np.empty((mesh_x, mesh_y))
+        # for i in range(zz.shape[0]):
+        #     for j in range(zz.shape[1]):
+        #         zz[i, j] = self.h_plot(np.array([[data_matrix[i, j]]]))
+
+        zz = self.h_plot(data_matrix)
 
         plt.contour(xx, yy, zz, levels=[-1, 0, 1], colors=('r', 'b', 'g'),
-                    linestyles = ('dashed', 'solid', 'dashed'))
+                    linestyles=('dashed', 'solid', 'dashed'))
 
         plt.grid(True)
         plt.show()
