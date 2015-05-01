@@ -59,8 +59,7 @@ class SupportVectorMachine(object):
         self._w = np.zeros(self.n)
 
     def gauss(self, x1, x2):
-        nb_row = x1.shape[0]
-        nb_col = x1.shape[1]
+        nb_row, nb_col = x1.shape[0:-1]
         nb_item = nb_row * nb_col
 
         x1_flat = x1.reshape(nb_item, -1)
@@ -198,8 +197,8 @@ class SupportVectorMachine(object):
     def h(self, vector):
         """Compute the hypothesis for the vector 'vector'"""
         nb_row, nb_col = vector.shape[0:-1]
-        vector_flat = vector.reshape(nb_row, -1)
-        print vector_flat.shape
+        nb_item = nb_row * nb_col
+        vector_flat = vector.reshape(nb_item, -1)
         result_flat = np.array([np.dot(self.w, item) - self.b
                                 for item in vector_flat])
         return result_flat.reshape((nb_row, nb_col))
@@ -237,10 +236,10 @@ class SupportVectorMachine(object):
         plt.plot(negative_examples[:, 0], negative_examples[:, 1], 'ro')
 
         # Plot separator hyperplane
-        min_x, max_x = self.X_attributes[
-            :, 0].min(), self.X_attributes[:, 0].max()
-        min_y, max_y = self.X_attributes[
-            :, 1].min(), self.X_attributes[:, 1].max()
+        min_x, max_x = self.X_attributes[:, 0].min(), \
+            self.X_attributes[:, 0].max()
+        min_y, max_y = self.X_attributes[:, 1].min(), \
+            self.X_attributes[:, 1].max()
 
         delta_x = max_x - min_x
         delta_y = max_y - min_y
@@ -256,11 +255,6 @@ class SupportVectorMachine(object):
         data_matrix = np.empty((mesh_x, mesh_y, 2))
         data_matrix[:, :, 0] = xx
         data_matrix[:, :, 1] = yy
-
-        # zz = np.empty((mesh_x, mesh_y))
-        # for i in range(zz.shape[0]):
-        #     for j in range(zz.shape[1]):
-        #         zz[i, j] = self.h_plot(np.array([[data_matrix[i, j]]]))
 
         zz = self.h_plot(data_matrix)
 
