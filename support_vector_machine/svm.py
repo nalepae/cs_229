@@ -35,12 +35,10 @@ class SupportVectorMachine(object):
             self.X_attributes = datas[:, :-1]
             m = self.X_attributes.shape[0]
 
-            self.X = np.empty((m, m))
-            for i in range(m):
-                for j in range(m):
-                    x1 = self.X_attributes[i]
-                    x2 = self.X_attributes[j]
-                    self.X[i, j] = self.gauss(x1, x2)
+            X_matrix = np.tile(self.X_attributes, m).reshape(m, m, -1)
+            X_matrix_T = np.tile(self.X_attributes.ravel(), m)
+
+            self.X = self.gauss(X_matrix, X_matrix_T)
 
         self.Y = datas[:, -1]
 
@@ -59,17 +57,17 @@ class SupportVectorMachine(object):
         self._w = np.zeros(self.n)
 
     def gauss(self, x1, x2):
-        nb_row, nb_col = x1.shape[0:-1]
-        nb_item = nb_row * nb_col
+        firsts_dimensions = x1.shape[0:-1]
+        last_dimension = x1.shape[-1]
 
-        x1_flat = x1.reshape(nb_item, -1)
-        x2_flat = x2.reshape(nb_item, -1)
+        x1_flat = x1.reshape(-1, last_dimension)
+        x2_flat = x2.reshape(-1, last_dimension)
 
         v = x1_flat - x2_flat
         result_flat = np.array([np.exp(- np.dot(item, item) /
                                        (2 * self.sigma ** 2)) for item in v])
 
-        return result_flat.reshape(nb_row, nb_col)
+        return result_flat.reshape(firsts_dimensions)
 
     def _get_alphas(self):
         """Get _alphas"""
@@ -208,10 +206,14 @@ class SupportVectorMachine(object):
         if self.chosen_kernel == KERNEL_LINEAR:
             return self.h(vector)
         elif self.chosen_kernel == KERNEL_GAUSSIAN:
-            vector_upspace = np.empty(self.m)
-            for i in range(self.m):
-                vector_upspace[i] = self.gauss(vector, self.X_attributes[i])
+            (nb_raw, nb_col) = vector.shape[0:2]
+            matrix_flat = np.repeat(vector, self.m, axis=1)
+            matrix = matrix_flat.reshape(nb_raw, nb_col, self.m, -1)
 
+            matrix_2_flat = np.tile(self.X_attributes.ravel(), nb_raw * nb_col)
+            matrix_2 = matrix_2_flat.reshape(nb_raw, nb_col, self.m, -1)
+
+            vector_upspace = self.gauss(matrix, matrix_2)
             return self.h(vector_upspace)
 
     def train(self):
